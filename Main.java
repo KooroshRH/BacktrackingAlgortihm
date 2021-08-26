@@ -6,18 +6,18 @@ import java.util.stream.IntStream;
 
 public class Main
 {
-    public static class Card implements Comparable<Card>
+    public static class Block implements Comparable<Block>
     {
         public int y;
         public int x;
         public String color;
         public int number;
-        public Card[][] board;
+        public Block[][] board;
         public ArrayList<Integer> numbersDomain = new ArrayList<>();
         public ArrayList<String> colorsDomain = new ArrayList<>();
 
         @Override
-        public int compareTo(Card o) {
+        public int compareTo(Block o) {
             if (colorsDomain.size() + numbersDomain.size() != o.colorsDomain.size() + o.numbersDomain.size())
             {
                 return colorsDomain.size() + numbersDomain.size() - o.colorsDomain.size() + o.numbersDomain.size();
@@ -68,11 +68,11 @@ public class Main
     public static class State implements Comparable<State>
     {
         public State parent;
-        public Card[][] board;
+        public Block[][] board;
 
         @Override
         public int compareTo(State o) {
-            return getChangedCardWithParent(this).compareTo(getChangedCardWithParent(o));
+            return getChangedBlockWithParent(this).compareTo(getChangedBlockWithParent(o));
         }
     }
 
@@ -94,7 +94,7 @@ public class Main
 
         State root = new State();
         root.parent = null;
-        Card[][] rootBoard = makeRootStateFromInput();
+        Block[][] rootBoard = makeRootStateFromInput();
         for (int i = 0; i < boardSize; i++)
             for (int j = 0; j < boardSize; j++) forwardChecking(rootBoard, i, j);
         root.board = rootBoard;
@@ -109,42 +109,42 @@ public class Main
         }
     }
 
-    private static Card[][] makeRootStateFromInput() {
-        Card[][] rootBoard = new Card[boardSize][boardSize];
+    private static Block[][] makeRootStateFromInput() {
+        Block[][] rootBoard = new Block[boardSize][boardSize];
         for (int i = 0; i < boardSize; i++)
         {
             String[] boardRow = scanner.nextLine().split(" ");
             for (int j = 0; j < boardSize; j++)
             {
-                String cardString = boardRow[j];
-                Card newCard = new Card();
-                if (cardString.toCharArray()[0] == '*')
+                String BlockString = boardRow[j];
+                Block newBlock = new Block();
+                if (BlockString.toCharArray()[0] == '*')
                 {
-                    newCard.number = 0;
+                    newBlock.number = 0;
                 }
                 else
                 {
-                    newCard.number = Integer.parseInt(cardString.substring(0, 1));
+                    newBlock.number = Integer.parseInt(BlockString.substring(0, 1));
                 }
-                newCard.color = cardString.substring(1);
-                if (newCard.color.equals("#"))
+                newBlock.color = BlockString.substring(1);
+                if (newBlock.color.equals("#"))
                 {
-                    newCard.color = null;
+                    newBlock.color = null;
                 }
-                newCard.colorsDomain = new ArrayList<>(colors);
-                Collections.reverse(newCard.colorsDomain);
+                newBlock.colorsDomain = new ArrayList<>(colors);
+                Collections.reverse(newBlock.colorsDomain);
                 for (int k = 1; k <= boardSize; k++)
                 {
-                    newCard.numbersDomain.add(k);
+                    newBlock.numbersDomain.add(k);
                 }
-                newCard.board = rootBoard;
-                rootBoard[i][j] = newCard;
+                newBlock.board = rootBoard;
+                rootBoard[i][j] = newBlock;
             }
         }
         return rootBoard;
     }
 
-    private static void forwardChecking(Card[][] board, int targetY, int targetX)
+    private static void forwardChecking(Block[][] board, int targetY, int targetX)
     {
         if (board[targetY][targetX].number != 0)
         {
@@ -294,7 +294,7 @@ public class Main
             {
                 if (state.board[i][j].color == null && state.board[i][j].colorsDomain.size() != 0)
                     for (String color : state.board[i][j].colorsDomain) {
-                        Card[][] newBoard = copyBoard(state.board);
+                        Block[][] newBoard = copyBoard(state.board);
                         newBoard[i][j].color = color;
                         State newState = new State();
                         newState.parent = state;
@@ -306,7 +306,7 @@ public class Main
                     }
                 if (state.board[i][j].number == 0 && state.board[i][j].numbersDomain.size() != 0)
                     for (Integer number : state.board[i][j].numbersDomain) {
-                        Card[][] newBoard = copyBoard(state.board);
+                        Block[][] newBoard = copyBoard(state.board);
                         newBoard[i][j].number = number;
                         State newState = new State();
                         newState.parent = state;
@@ -332,18 +332,18 @@ public class Main
         return IntStream.range(0, boardSize).anyMatch(i -> IntStream.range(0, boardSize).anyMatch(j -> (state.board[i][j].color == null && state.board[i][j].colorsDomain.size() == 0) || (state.board[i][j].number == 0 && state.board[i][j].numbersDomain.size() == 0)));
     }
 
-    private static Card[][] copyBoard(Card[][] board)
+    private static Block[][] copyBoard(Block[][] board)
     {
-        Card[][] newBoard = new Card[boardSize][boardSize];
+        Block[][] newBoard = new Block[boardSize][boardSize];
         for (int k = 0; k < boardSize; k++) {
             for (int m = 0; m < boardSize; m++) {
-                Card newCard = new Card();
-                newCard.number = board[k][m].number;
-                newCard.color = board[k][m].color;
-                newCard.numbersDomain = new ArrayList<>(board[k][m].numbersDomain);
-                newCard.colorsDomain = new ArrayList<>(board[k][m].colorsDomain);
-                newCard.board = board;
-                newBoard[k][m] = newCard;
+                Block newBlock = new Block();
+                newBlock.number = board[k][m].number;
+                newBlock.color = board[k][m].color;
+                newBlock.numbersDomain = new ArrayList<>(board[k][m].numbersDomain);
+                newBlock.colorsDomain = new ArrayList<>(board[k][m].colorsDomain);
+                newBlock.board = board;
+                newBoard[k][m] = newBlock;
             }
         }
         return newBoard;
@@ -385,7 +385,7 @@ public class Main
         System.out.println("::::::::::::::::::");
     }
 
-    public static Card getChangedCardWithParent(State state)
+    public static Block getChangedBlockWithParent(State state)
     {
         for (int i = 0; i < boardSize; i++)
         {
