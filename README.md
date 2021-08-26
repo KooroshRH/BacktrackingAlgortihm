@@ -3,13 +3,13 @@
 ## Overview
 
 In this project, we want to solve a customized sudoku game by traversing our search tree recursively.  
-We call this algorithm **Backtracking** and also we using **MRV** and **Degree** methods as heuristics.
+We call this algorithm **Backtracking** and also we use **MRV** and **Degree** methods as heuristics.
 
 ## Customized Sudoku
 
 In this game, we have a board that we want to fill with the correct number and also **Colors**.  
 Despite the original sudoku here we have a color besides the number for each block that we want to put them on.  
-Now let's review sudoku original rules:
+Now let's review sudoku's original rules:
 - We must use all numbers in each row
 - A number must be unique in each **row**
 - A number must be unique in each **column**
@@ -22,15 +22,15 @@ So we have new rules now:
 And we want to solve each sample of this game with a backtracking algorithm.
 
 ## How our code works
-We have a **Card** class that we store number, color, a list of possible colors, and a list of possible numbers for that card in this class.  
-And also in a class named **State**, we store a two-dimensional array of cards that represents each of the possible states.  
+We have a **Block** class that we store number, color, a list of possible colors, and a list of possible numbers for that block in this class.  
+And also in a class named **State**, we store a two-dimensional array of blocks that represents each of the possible states.  
 When making each state, after selecting one of the possible numbers and colors, we amend possible numbers and colors of other blocks using **Forward checking**.  
 And when we reach a state that is recognized as a possible target, we finish our algorithm and print that state.
 
 ## Sample
 As input in the first line, we get our colors count and then our board size. (our board is square)  
 After that in the second line, we get colors in prioritized order which the first one has the highest priority.  
-Then at each row, we get the cards. Each card is represented with two characters, the first is number and then color. (if the number is unknown we using * and if the color is unknown we using #)  
+Then at each row, we get the blocks. Each block is represented with two characters, the first is its number and the second is its color. (if the number is unknown we use * and if the color is unknown we using #)  
 
 ### Input
 ```
